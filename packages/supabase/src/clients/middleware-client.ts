@@ -24,14 +24,20 @@ export function createMiddlewareClient<GenericSchema = Database>(
       getAll() {
         return request.cookies.getAll();
       },
-      setAll(cookiesToSet) {
+      setAll(cookiesToSet, headers) {
         cookiesToSet.forEach(({ name, value }) =>
           request.cookies.set(name, value),
         );
+        // Forward the refreshed cookie header to the Server Component request,
+        // as well as writing the browser response cookies.
+        const forwarded=NextResponse.next({request:{headers:request.headers}});
+        forwarded.headers.forEach((value,name)=>response.headers.set(name,value));
 
         cookiesToSet.forEach(({ name, value, options }) =>
           response.cookies.set(name, value, options),
         );
+        Object.entries(headers).forEach(([name,value]) => response.headers.set(name,value));
+        response.headers.set('Cache-Control','private, no-store, max-age=0');
       },
     },
   });

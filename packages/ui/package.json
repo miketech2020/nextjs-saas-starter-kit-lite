@@ -129,17 +129,16 @@
     "@types/react-dom": "catalog:",
     "class-variance-authority": "catalog:",
     "date-fns": "catalog:",
-    "next": "catalog:",
+    "next": "16.4.0",
     "next-intl": "catalog:",
     "next-safe-action": "catalog:",
     "next-themes": "catalog:",
     "react-day-picker": "catalog:",
     "react-hook-form": "catalog:",
-    "shadcn": "catalog:",
     "sonner": "catalog:",
     "tailwindcss": "catalog:",
     "vaul": "catalog:",
-    "vitest": "catalog:",
+    "vitest": "^4.1.11",
     "zod": "catalog:"
   }
 }

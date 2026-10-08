@@ -1,3 +1,9 @@
+# Service Hub — nền quản lý rửa xe và giặt ủi
+
+Xem [kế hoạch](docs/service-hub-plan.md), [hướng dẫn chạy](docs/SETUP.md) và [nguồn/giấy phép](third-party/NOTICE.md). Trang thử: `/service-demo`. Trang quản lý thật: `/home/services`.
+
+---
+
 ![Makerkit - Next.js Supabase SaaS Starter Kit \[Lite version\]](apps/web/public/images/makerkit.webp)
 
 # NEW! Next.js Supabase SaaS Starter Kit (Lite)
@@ -342,3 +348,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 No support is provided for this kit. Feel free to open an issue if you have any questions or need help, but there is no guaranteed response time, nor guarantee a fix.
 
 For dedicated support, priority fixes, and advanced features, [check out our full version](https://makerkit.dev).
+# Service Hub — S0 local hardening
+
+Import starter + S0 security fixes on a review branch. See [S0 delivery and verified limits](docs/S0-DELIVERY.md). Payment and physical-device HTTP adapters are disabled; no cloud deployment is included.

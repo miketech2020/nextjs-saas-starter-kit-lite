@@ -29,8 +29,9 @@ export async function requireUser(client: SupabaseClient): Promise<
     )
 > {
   const { data, error } = await client.auth.getClaims();
+  const verified=await client.auth.getUser();
 
-  if (!data?.claims || error) {
+  if (!data?.claims || error || verified.error || !verified.data.user || verified.data.user.id!==data.claims.sub) {
     return {
       data: null,
       error: new AuthenticationError(),

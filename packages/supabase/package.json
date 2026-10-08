@@ -22,7 +22,8 @@
   },
   "scripts": {
     "clean": "git clean -xdf .turbo node_modules",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.mjs"
   },
   "devDependencies": {
     "@kit/tsconfig": "workspace:*",
@@ -31,7 +32,7 @@
     "@tanstack/react-query": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
-    "next": "catalog:",
+    "next": "16.4.0",
     "react": "catalog:",
     "server-only": "catalog:",
     "zod": "catalog:"

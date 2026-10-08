@@ -1,5 +1,4 @@
-import { redirect } from 'next/navigation';
-import type { NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 import { createAuthCallbackService } from '@kit/supabase/auth';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
@@ -13,5 +12,7 @@ export async function GET(request: NextRequest) {
     redirectPath: pathsConfig.app.home,
   });
 
-  return redirect(nextPath);
+  const response=NextResponse.redirect(new URL(nextPath,process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'));
+  response.headers.set('Cache-Control','private, no-store, max-age=0');
+  return response;
 }
