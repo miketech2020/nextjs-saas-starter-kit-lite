@@ -1,10 +1,49 @@
 name: Workflow
 on:
+  workflow_dispatch:
   push:
     branches: [main]
   pull_request:
     branches: [main]
 jobs:
+  s0:
+    name: S0 security and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: service_hub_s0_test
+          POSTGRES_PASSWORD: disposable-test-only
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm audit --audit-level=high
+      - run: pnpm run typecheck
+      - run: pnpm run test:s0
+        env:
+          SH_TEST_DATABASE_URL: postgresql://postgres:disposable-test-only@127.0.0.1:5432/service_hub_s0_test
+      - run: pnpm --filter web build:test
+      - run: pnpm --filter web-e2e exec playwright install --with-deps chromium
+      - name: Browser S0 smoke
+        run: |
+          NODE_ENV=test pnpm --filter web start:test > /tmp/service-hub-web.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid"' EXIT
+          for i in $(seq 1 60); do if curl -fsS http://localhost:3000/service-demo >/dev/null; then break; fi; sleep 1; done
+          pnpm --filter web-e2e exec playwright test tests/s0/s0.spec.ts --project=chromium --retries=0
   typescript:
     name: ʦ TypeScript
     timeout-minutes: 8

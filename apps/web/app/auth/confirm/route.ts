@@ -12,5 +12,7 @@ export async function GET(request: NextRequest) {
     redirectPath: pathsConfig.app.home,
   });
 
-  return NextResponse.redirect(url);
+  const response=NextResponse.redirect(url);
+  response.headers.set('Cache-Control','private, no-store, max-age=0');
+  return response;
 }

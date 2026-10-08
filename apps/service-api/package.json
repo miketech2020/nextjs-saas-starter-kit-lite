@@ -1,0 +1,14 @@
+{
+  "name": "service-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file=.env src/server.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "@kit/service-core": "workspace:*",
+    "@payos/node": "1.0.8"
+  }
+}

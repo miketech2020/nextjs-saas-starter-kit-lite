@@ -23,7 +23,7 @@
     "@kit/tsconfig": "workspace:*",
     "@supabase/supabase-js": "catalog:",
     "@types/node": "catalog:",
-    "next": "catalog:",
+    "next": "16.4.0",
     "zod": "catalog:"
   }
 }

@@ -32,7 +32,7 @@ const config = {
   },
   logging: {
     fetches: {
-      fullUrl: true,
+      fullUrl: false,
     },
   },
   serverExternalPackages: [],
@@ -72,7 +72,7 @@ const config = {
   },
   /** We already do typechecking as a separate task in CI. Next.js 16 removed
    * the `eslint` option along with `next lint`; linting runs via the ESLint CLI. */
-  typescript: { ignoreBuildErrors: true },
+  typescript: { ignoreBuildErrors: false },
 };
 
 export default withNextIntl(config);

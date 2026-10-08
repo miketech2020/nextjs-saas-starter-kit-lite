@@ -34,6 +34,9 @@ export async function proxy(request: NextRequest) {
 
     // if a pattern handler returns a response, return it
     if (patternHandlerResponse) {
+      response.cookies.getAll().forEach(cookie => patternHandlerResponse.cookies.set(cookie));
+      for(const name of ['Pragma','Expires']) { const value=response.headers.get(name);if(value)patternHandlerResponse.headers.set(name,value); }
+      patternHandlerResponse.headers.set('Cache-Control','private, no-store, max-age=0');
       return patternHandlerResponse;
     }
   }
@@ -46,6 +49,7 @@ export async function proxy(request: NextRequest) {
 
   // if no pattern handler returned a response,
   // return the session response
+  if (request.nextUrl.pathname.startsWith('/auth') || request.nextUrl.pathname.startsWith('/home')) response.headers.set('Cache-Control','private, no-store, max-age=0');
   return response;
 }
 

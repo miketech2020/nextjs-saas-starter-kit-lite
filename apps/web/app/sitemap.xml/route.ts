@@ -1,6 +1,5 @@
 import { cacheLife } from 'next/cache';
 
-import { getServerSideSitemap } from 'next-sitemap';
 
 import appConfig from '~/config/app.config';
 
@@ -20,7 +19,9 @@ export async function GET() {
     'Cache-Control': `public, max-age=${MAX_AGE}, s-maxage=${S_MAX_AGE}`,
   };
 
-  return getServerSideSitemap([...paths], headers);
+  const escape=(value:string)=>value.replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[char]!));
+  const xml='<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+paths.map(p=>`<url><loc>${escape(p.loc)}</loc><lastmod>${escape(p.lastmod)}</lastmod></url>`).join('')+'</urlset>';
+  return new Response(xml,{headers:{...headers,'Content-Type':'application/xml; charset=utf-8'}});
 }
 
 /**

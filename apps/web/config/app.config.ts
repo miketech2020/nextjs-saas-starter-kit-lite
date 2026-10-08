@@ -38,7 +38,7 @@ const AppConfigSchema = z
     (schema) => {
       const isCI = process.env.NEXT_PUBLIC_CI;
 
-      if (isCI ?? !schema.production) {
+      if (isCI === 'true' || !schema.production) {
         return true;
       }
 

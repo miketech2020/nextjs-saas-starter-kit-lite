@@ -1,4 +1,5 @@
 import 'server-only';
+import { safeAuthPath } from './safe-auth-path';
 
 import {
   AuthError,
@@ -39,16 +40,9 @@ class AuthCallbackService {
       errorPath?: string;
     },
   ): Promise<URL> {
-    const url = new URL(request.url);
-    const searchParams = url.searchParams;
-
-    const host = request.headers.get('host');
-
-    // set the host to the request host since outside of Vercel it gets set as "localhost"
-    if (url.host.includes('localhost:') && !host?.includes('localhost')) {
-      url.host = host as string;
-      url.port = '';
-    }
+    const input = new URL(request.url);
+    const searchParams = input.searchParams;
+    const url = new URL(params.redirectPath, process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000');
 
     url.pathname = params.redirectPath;
 
@@ -58,7 +52,8 @@ class AuthCallbackService {
       searchParams.get('next') ?? searchParams.get('callback');
 
     let nextPath: string | null = null;
-    const callbackUrl = callbackParam ? new URL(callbackParam) : null;
+    let callbackUrl: URL | null = null;
+    try { if (callbackParam) { const candidate = new URL(callbackParam, url.origin); if (candidate.origin === url.origin) callbackUrl = candidate; } } catch { /* Use the trusted default. */ }
 
     // if we have a callback url, we check if it has a next path
     if (callbackUrl) {
@@ -82,10 +77,10 @@ class AuthCallbackService {
 
     // if we have a next path, we redirect to that path
     if (nextPath) {
-      url.pathname = nextPath;
+      url.pathname = safeAuthPath(nextPath, params.redirectPath);
     }
 
-    if (token_hash && type) {
+    if (token_hash && token_hash.length <= 2048 && type && ['signup','invite','magiclink','recovery','email_change','email'].includes(type)) {
       const { error } = await this.client.auth.verifyOtp({
         type,
         token_hash,
@@ -136,7 +131,9 @@ class AuthCallbackService {
     const nextUrlPathFromParams = searchParams.get('next');
     const errorPath = params.errorPath ?? '/auth/callback/error';
 
-    const nextUrl = nextUrlPathFromParams ?? params.redirectPath;
+    const nextUrl = safeAuthPath(nextUrlPathFromParams, params.redirectPath);
+
+    if (!authCode || authCode.length > 2048) return onError({error:'Missing authorization code',path:errorPath});
 
     if (authCode) {
       try {
@@ -152,13 +149,7 @@ class AuthCallbackService {
           });
         }
       } catch (error) {
-        console.error(
-          {
-            error,
-            name: `auth.callback`,
-          },
-          `An error occurred while exchanging code for session`,
-        );
+        console.error('auth.callback: code exchange failed');
 
         const message = error instanceof Error ? error.message : error;
 
@@ -196,7 +187,7 @@ function onError({
 
   console.error(
     {
-      error: JSON.stringify(error),
+      code: 'AUTH_CALLBACK_FAILED',
       name: `auth.callback`,
     },
     `An error occurred while signing user in`,

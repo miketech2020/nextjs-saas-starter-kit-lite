@@ -1,4 +1,4 @@
-import { Home, User } from 'lucide-react';
+import { Home, User, Layers } from 'lucide-react';
 import { z } from 'zod';
 
 import { NavigationConfigSchema } from '@kit/ui/navigation-schema';
@@ -11,6 +11,7 @@ const routes = [
   {
     label: 'common.routes.application',
     children: [
+      { label: 'Điều hành dịch vụ', path: '/home/services', Icon: <Layers className={iconClasses} /> },
       {
         label: 'common.routes.home',
         path: pathsConfig.app.home,

@@ -1,23 +1,4 @@
-import { Inter as SansFont } from 'next/font/google';
-
-/**
- * @sans
- * @description Define here the sans font.
- * By default, it uses the Inter font from Google Fonts.
- */
-const sans = SansFont({
-  subsets: ['latin'],
-  variable: '--font-sans',
-  fallback: ['system-ui', 'Helvetica Neue', 'Helvetica', 'Arial'],
-  preload: true,
-  weight: ['300', '400', '500', '600', '700'],
-});
-
-/**
- * @heading
- * @description Define here the heading font.
- */
+/** System fonts keep Vietnamese readable and builds independent of Google Fonts. */
+const sans = { variable: 'font-system' };
 const heading = sans;
-
-// we export these fonts into the root layout
 export { sans, heading };

@@ -38,7 +38,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "lucide-react": "catalog:",
-    "next": "catalog:",
+    "next": "16.4.0",
     "react-hook-form": "catalog:",
     "sonner": "catalog:",
     "zod": "catalog:"

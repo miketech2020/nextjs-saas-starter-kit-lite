@@ -20,6 +20,7 @@
     "lint:fix": "oxlint --fix",
     "typecheck": "turbo typecheck --cache-dir=.turbo",
     "test": "turbo test --cache-dir=.turbo",
+    "test:s0": "pnpm --filter @kit/service-core test && pnpm --filter @kit/supabase test && pnpm --filter service-api test && pnpm --filter @kit/ui test:unit",
     "update": "pnpm update -r",
     "syncpack:list": "pnpm dlx syncpack list-mismatches",
     "syncpack:fix": "pnpm dlx syncpack fix-mismatches",
